@@ -3,7 +3,16 @@ const morgan = require('morgan')
 const app = express()
 
 app.use(express.json())
-app.use(morgan('tiny'))
+
+morgan.token('person', (req, res) => {
+  const id = req.params.id
+  const person = {...persons.find(person => person.id === id)} // copy person
+  if (person) { delete person.id } // remove id from log. If we didn't copy we'd modify original data
+  return person ? JSON.stringify(person) : 'Person not found'
+})
+
+const tiny = ':method :url :status :res[content-length] - :response-time ms'
+app.use(morgan(tiny + ' :person'))
 
 let persons = [
   {
