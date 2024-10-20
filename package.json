@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js",
+    "dev": "echo \"http://localhost:3001\" && nodemon index.js",
     "test": "echo \\\"Error: no test specified\\\" && exit 1",
     "build:ui": "rm -rf ui && (cd ../frontend/ && npm run build) && cp -r ../frontend/dist ui",
     "deploy": "fly deploy",
