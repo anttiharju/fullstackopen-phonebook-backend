@@ -1,6 +1,6 @@
 {
   "name": "phonebook-backend",
-  "version": "3.8",
+  "version": "3.9",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -11,6 +11,7 @@
   "license": "MIT",
   "description": "",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.21.1",
     "morgan": "^1.10.0"
   },
