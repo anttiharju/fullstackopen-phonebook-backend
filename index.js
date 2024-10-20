@@ -5,14 +5,14 @@ const app = express()
 app.use(express.json())
 
 morgan.token('person', (req, res) => {
-  const id = req.params.id
-  const person = {...persons.find(person => person.id === id)} // copy person
-  if (person) { delete person.id } // remove id from log. If we didn't copy we'd modify original data
-  return person ? JSON.stringify(person) : 'Person not found'
+  if (req.method === 'POST') {
+    return JSON.stringify(req.body)
+  }
+  return null
 })
 
 const tiny = ':method :url :status :res[content-length] - :response-time ms'
-app.use(morgan(tiny + ' :person'))
+app.use(morgan(tiny + 'tiny :person'))
 
 let persons = [
   {
