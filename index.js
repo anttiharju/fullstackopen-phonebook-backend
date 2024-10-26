@@ -12,7 +12,7 @@ app.use(express.static('ui'))
 app.use(express.json())
 app.use(requestLogger)
 
-morgan.token('person', (req, res) => {
+morgan.token('person', (req) => {
   if (req.method === 'POST') {
     return JSON.stringify(req.body)
   }
@@ -36,21 +36,21 @@ app.get('/api/persons', (request, response) => {
 
 app.get('/api/persons/:id', (request, response, next) => {
   Person.findByIdAndUpdate(request.params.id)
-  .then(persons => {
-    if (persons.length > 0) {
-      response.json(persons)
-    } else {
-      response.status(404).end()
-    }
-  })
-  .catch(error => next(error))
+    .then(persons => {
+      if (persons.length > 0) {
+        response.json(persons)
+      } else {
+        response.status(404).end()
+      }
+    })
+    .catch(error => next(error))
 })
 
 app.delete('/api/persons/:id', (request, response, next) => {
-  Person.deleteOne({ _id: request.params.id }).then(result => {
+  Person.deleteOne({ _id: request.params.id }).then(() => {
     response.status(204).end()
   })
-  .catch(error => next(error))
+    .catch(error => next(error))
 })
 
 app.post('/api/persons', (request, response, next) => {
