@@ -22,7 +22,10 @@
     "morgan": "^1.10.0"
   },
   "devDependencies": {
+    "@eslint/js": "^9.13.0",
     "@flydotio/dockerfile": "^0.5.9",
+    "eslint": "^9.13.0",
+    "globals": "^15.11.0",
     "nodemon": "^3.1.7"
   }
 }
