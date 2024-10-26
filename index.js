@@ -4,9 +4,13 @@ const app = express()
 const cors = require('cors')
 const Person = require('./models/person')
 
-app.use(express.static('ui'))
+const tiny = ':method :url :status :res[content-length] - :response-time ms'
+const requestLogger = morgan(tiny + 'tiny :person')
+
 app.use(cors())
+app.use(express.static('ui'))
 app.use(express.json())
+app.use(requestLogger)
 
 morgan.token('person', (req, res) => {
   if (req.method === 'POST') {
@@ -14,9 +18,6 @@ morgan.token('person', (req, res) => {
   }
   return null
 })
-
-const tiny = ':method :url :status :res[content-length] - :response-time ms'
-app.use(morgan(tiny + 'tiny :person'))
 
 app.get('/info', (request, response) => {
   Person.countDocuments({}).then(count => {
@@ -33,16 +34,22 @@ app.get('/api/persons', (request, response) => {
   })
 })
 
-app.get('/api/persons/:id', (request, response) => {
+app.get('/api/persons/:id', (request, response, next) => {
   Person.find({ _id: request.params.id }).then(persons => {
-    response.json(persons)
+    if (persons.length > 0) {
+      response.json(persons)
+    } else {
+      response.status(404).end()
+    }
   })
+  .catch(error => next(error))
 })
 
 app.delete('/api/persons/:id', (request, response) => {
   Person.deleteOne({ _id: request.params.id }).then(result => {
     response.status(204).end()
   })
+  .catch(error => next(error))
 })
 
 app.post('/api/persons', (request, response) => {
@@ -69,6 +76,26 @@ app.post('/api/persons', (request, response) => {
     response.json(savedPerson)
   })
 })
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
+
+// handler of requests with unknown endpoint
+app.use(unknownEndpoint)
+
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
+
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id' })
+  }
+
+  next(error)
+}
+
+// this has to be the last loaded middleware, also all the routes should be registered before this!
+app.use(errorHandler)
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
