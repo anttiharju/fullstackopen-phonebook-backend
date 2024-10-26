@@ -5,7 +5,7 @@ const cors = require('cors')
 const Person = require('./models/person')
 
 const tiny = ':method :url :status :res[content-length] - :response-time ms'
-const requestLogger = morgan(tiny + 'tiny :person')
+const requestLogger = morgan(tiny + ' :person')
 
 app.use(cors())
 app.use(express.static('ui'))
