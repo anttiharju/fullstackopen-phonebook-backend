@@ -1,6 +1,6 @@
 {
   "name": "phonebook-backend",
-  "version": "3.17",
+  "version": "3.18",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
