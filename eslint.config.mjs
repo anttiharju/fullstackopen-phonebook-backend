@@ -6,7 +6,6 @@ export default [
   js.configs.recommended,
   {
     files: ["**/*.js"],
-    ignores: ["ui/**"],
     languageOptions: {
       sourceType: "commonjs",
       globals: {
@@ -44,5 +43,8 @@ export default [
       ],
       'no-console': 'off',
     },
+  },
+  {
+    ignores: ["ui/**"],
   },
 ]
